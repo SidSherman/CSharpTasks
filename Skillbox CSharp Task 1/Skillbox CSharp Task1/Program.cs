@@ -28,24 +28,27 @@ namespace skillbox_homework
             // 3. Вывод значений переменных на экран
 
             Console.WriteLine(
-                $"Ф.И.О: {fullName} \n" +
-                $"Возраст: {age} \n" +
+                $"Ф.И.О:                     {fullName} \n" +
+                $"Возраст:                   {age} \n" +
                 $"Баллы по программированию: {codeScore} \n" +
-                $"Баллы по математике: {mathScore} \n" +
-                $"Баллы по физике: {physScore} \n" +
-                $"E-mail: {email}"
+                $"Баллы по математике:       {mathScore} \n" +
+                $"Баллы по физике:           {physScore} \n" +
+                $"E-mail:                    {email}"
                 );
+
+            Console.ReadKey();
 
             // 4. Подсчет суммы баллов с помощью функции Sum и вывод на экран
 
-            Console.WriteLine("Сумма всех баллов: " + Sum(new float[3] { codeScore, mathScore, physScore }));
+            Console.WriteLine(
+                $"\bСумма всех баллов:             {Sum(new float[3] { codeScore, mathScore, physScore })}");
 
             // 5. Подсчет среднего арифметического баллов с помощью функции AverangeValue и вывод на экран
 
-            Console.WriteLine("Среднее арифметическое баллов: " + AverangeValue(new float[3] { codeScore, mathScore, physScore }));
+            Console.WriteLine(
+                $"Среднее арифметическое баллов: {AverangeValue(new float[3] { codeScore, mathScore, physScore })}");
 
         }
-
 
         // Функция для подсчета суммы значений
         static float Sum(float[] values)
