@@ -23,7 +23,12 @@ namespace skillbox_homework
                 Console.WriteLine("Введите номер задания или 0, чтобы выйти: ");
 
                 int taskNumber = -1;
-                int.TryParse(Console.ReadLine(), out taskNumber);
+                if(!int.TryParse(Console.ReadLine(), out taskNumber))
+                {
+                    Console.WriteLine("Введено недопустимое значение, нажмите Enter");
+                    Console.ReadLine();
+                    continue;
+                }
                 
                 switch (taskNumber)
                 {
@@ -55,17 +60,22 @@ namespace skillbox_homework
 
 
         // Провнрка числа на четность
-        static int IsNumberEven()
+        static void IsNumberEven()
         {
 
             Console.WriteLine("Введите целое число: ");
 
             int value = 0;
-
-            if(!int.TryParse(Console.ReadLine(), out value))
+            while(true)
             {
-                return 0;
+                if (!int.TryParse(Console.ReadLine(), out value))
+                {
+                    Console.WriteLine("Введено недопустимое значение, введите ещё раз: ");  
+                    continue;
+                }
+                else break;
             }
+           
 
             if (value % 2 == 0)
                 Console.WriteLine($"Число {value} - четное");
@@ -74,7 +84,6 @@ namespace skillbox_homework
 
             Console.WriteLine("Нажмите Enter, чтобы продолжить");
             Console.ReadLine();
-            return 0;
         }
 
 
@@ -83,14 +92,22 @@ namespace skillbox_homework
         {
             Console.WriteLine("Введите количество карт на руках: ");
             int count  = 0;
-            int.TryParse(Console.ReadLine(), out count);
 
+            while (true)
+            {
+                if (!int.TryParse(Console.ReadLine(), out count))
+                {
+                    Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                    continue;
+                }
+                else break;
+            }
 
             Console.WriteLine("По очереди введите номинал карт. Для карт с картинками используйте следующие обозначения:\n" +
                     "Валет = J\n" +
                     "Дама = Q\n" +
                     "Король = K\n" +
-                    "Туз = T\n");
+                    "Туз = T");
 
             int sum = 0;
 
@@ -147,7 +164,7 @@ namespace skillbox_homework
                         Console.WriteLine(pattern, sum);
                         break;
                     default:
-                        Console.WriteLine("Неверное значение, введите ещё раз");
+                        Console.WriteLine("Введено недопустимое значение, попробуйте ещё раз: ");
                         i--;
                         break;
                 }
@@ -160,14 +177,19 @@ namespace skillbox_homework
         }
     
         // проверка числа на простоту
-        static int SimpleNumCheck()
+        static void SimpleNumCheck()
         {
             Console.WriteLine("Введите целое число: ");
             int value = 0;
 
-            if (!int.TryParse(Console.ReadLine(), out value))
+            while (true)
             {
-                return 0;
+                if (!int.TryParse(Console.ReadLine(), out value))
+                {
+                    Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                    continue;
+                }
+                else break;
             }
 
             int i = 3;
@@ -201,7 +223,7 @@ namespace skillbox_homework
 
             Console.WriteLine("Нажмите Enter, чтобы продолжить");
             Console.ReadLine();
-            return 0;
+       
         }
 
         // нахождение минимального значений
@@ -209,19 +231,35 @@ namespace skillbox_homework
         {
             Console.WriteLine("Введите дилну последовательности");
             int count = 0;
-            
-            if (!int.TryParse(Console.ReadLine(), out count))
+
+            while (true)
             {
-                return 0;
+                if (!int.TryParse(Console.ReadLine(), out count))
+                {
+                    Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                    continue;
+                }
+                else break;
             }
 
             int min = Int32.MaxValue;
             for (int i = 0; i< count; i++)
             {
                 Console.WriteLine("Введите число: ");
-                int value = int.Parse(Console.ReadLine());
+                int value = min;
 
-                if(min > value)
+                while (true)
+                {
+                    if (!int.TryParse(Console.ReadLine(), out value))
+                    {
+                        Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                        continue;
+                    }
+                    else break;
+                }
+
+
+                if (min > value)
                 {
                     min = value;
                 }
@@ -242,11 +280,17 @@ namespace skillbox_homework
 
             Console.WriteLine("Введите максимальное число");
             int max = 0;
-            
-            if (!int.TryParse(Console.ReadLine(), out max))
+
+            while (true)
             {
-                return 0;
+                if (!int.TryParse(Console.ReadLine(), out max))
+                {
+                    Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                    continue;
+                }
+                else break;
             }
+
 
             Random randomize = new Random();
             int randomNumber = randomize.Next(1, max + 1);
@@ -257,11 +301,21 @@ namespace skillbox_homework
             {
 
                 int value = 0;
-               
-                if(!int.TryParse(Console.ReadLine(), out value))
+
+                while (true)
                 {
-                    return 0;
+                    if (!int.TryParse(Console.ReadLine(), out value))
+                    {
+                        Console.WriteLine("Введено недопустимое значение,попробуйте ещё раз: ");
+                        continue;
+                    }
+                    else break;
                 }
+
+                if (value == -1)
+                    {
+                    break;
+                    }
 
                 if (value == randomNumber)
                 {
@@ -271,8 +325,9 @@ namespace skillbox_homework
                 }
                 else
                 {
-                    Console.WriteLine("Вы не угадали :(\nПопробуйте ещё раз. Если вы хотите узнать число, то нажмите Enter");
+                    Console.WriteLine("Вы не угадали :(\nПопробуйте ещё раз. Если вы хотите узнать число, то введите -1");
                 }
+                
             }
 
             Console.WriteLine("Загаданное число: " + randomNumber);
