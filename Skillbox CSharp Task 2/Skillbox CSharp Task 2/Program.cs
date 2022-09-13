@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace skillbox_homework
+namespace SkillboxHomework
 {
     class SkillboxTask2
     {
