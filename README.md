@@ -1,2 +1,2 @@
-# SkillboxCSharpTasks
+# CSharpTasks
 My homeworks repository
