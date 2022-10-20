@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace SkillboxHomework
 {
-    class SkillboxTask3
+    class SkillboxTask4
     { 
 
         static void Main()
