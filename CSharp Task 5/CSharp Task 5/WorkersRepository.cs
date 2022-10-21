@@ -102,6 +102,48 @@ namespace CSharp_Task_5
             }
         }
 
+        public void SortData(int sortParam)
+        {
+            switch (sortParam){
+                case 1:
+                    {
+                        workers = workers.OrderBy(x => x.Id).ToList();
+                        break;
+                    }
+                case 2:
+                    {
+                        workers = workers.OrderBy(x => x.CreationTime).ToList();
+                        break;
+                    }
+                case 3:
+                    {
+                        workers = workers.OrderBy(x => x.Name).ToList();
+                        break;
+                    }
+                case 4:
+                    {
+                        workers = workers.OrderBy(x => x.Tall).ToList();
+                        break;
+                    }
+                case 5:
+                    {
+                        workers = workers.OrderBy(x => x.BirthDate).ToList();
+                        break;
+                    }
+                case 6:
+                    {
+                        workers = workers.OrderBy(x => x.BirthLocation).ToList();
+                        break;
+                    }
+                default:
+                    {
+                        workers = workers.OrderBy(x => x.Id).ToList();
+                        break;
+                    }
+                   
+            }
+        }
+
         public void OutputData(DateTime firstDate, DateTime secondTime)
         {
             if (RepositoryIsEmpty())
@@ -142,6 +184,7 @@ namespace CSharp_Task_5
             { 
                 return;
             }
+
             foreach (Worker worker in workers)
             {
                 Console.WriteLine(worker.ReadValues(" "));

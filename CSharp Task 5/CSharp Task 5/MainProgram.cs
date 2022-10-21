@@ -33,6 +33,7 @@ namespace CSharp_Task_5
                     "4.Вывести все данные\n" +
                     "5.Стереть все данные\n" +
                     "6.Вывести записи, созданные в пределах указанных дат\n" +
+                    "7.Отсортировать данные по параметру\n" +
                     "0.Выход из программы");
 
                 int taskNumber = 0;
@@ -89,6 +90,20 @@ namespace CSharp_Task_5
                         DateTime secondDate = TryParseCustom.TryReadLineDataTime(Console.ReadLine());
 
                         repository.OutputData(firstDate, secondDate);
+                        break;
+                    }
+                case 7:
+                    {
+                        Console.WriteLine("Введите номер параметра:\n" +
+                                           "1.ID (по-умолчанию)\n" +
+                                           "2.Дата создания записи\n" +
+                                           "3.ФИО\n" +
+                                           "4.Рост\n" +
+                                           "5.Дата рождения\n" +
+                                           "6.Место рождения\n");
+
+                        repository.SortData(TryParseCustom.TryReadLineInt(Console.ReadLine()));
+                        repository.SaveData();
                         break;
                     }
 
