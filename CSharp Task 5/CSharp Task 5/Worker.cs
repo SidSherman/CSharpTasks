@@ -5,7 +5,7 @@ namespace CSharp_Task_5
 {
     struct Worker
     {
-        private int id;
+        private int id = 0;
         private DateTime creationTime;
         private string name;
         private int old;
@@ -32,6 +32,7 @@ namespace CSharp_Task_5
             this.birthDate = birthDate;
             this.birthLocation = birthLocation;
         }
+
         public string ReadValues(string splitter)
         {
             string str = "";

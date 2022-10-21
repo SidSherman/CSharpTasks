@@ -6,148 +6,120 @@ namespace CSharp_Task_5
 {
     class MainProgram
     {
-         static void Main()
-        {
+        static WorkersRepository repository;
 
+        static void Main()
+        {
+            
             Console.OutputEncoding = Encoding.Unicode;
             Console.InputEncoding = Encoding.Unicode;
 
+            // Read data and update repository
+            repository = new WorkersRepository();
+            repository.SavePath = "workers.cvs";
+            repository.ReadDataFromFile();
+
+            GetUsersCommand();
+        }
+
+        static void GetUsersCommand()
+        {
             while (true)
             {
+                Console.WriteLine("Введите действие:\n" +
+                    "1.Добавить запись в репозиторий\n" +
+                    "2.Удалить запись об указанном сотруднике\n" +
+                    "3.Вывести данные об указанном сотруднике\n" +
+                    "4.Вывести все данные\n" +
+                    "5.Стереть все данные\n" +
+                    "6.Вывести записи, созданные в пределах указанных дат\n" +
+                    "0.Выход из программы");
+
                 int taskNumber = 0;
+                taskNumber = TryParseCustom.TryReadLineInt(Console.ReadLine());
 
-                while (true)
-                {
-                    Console.WriteLine("Введите действие:\n" +
-                        "1.Добавить запись в файл\n" +
-                        "2.Вывести данные на экран\n" +
-                        "3.Стереть данные\n" +
-                        "0.Выход из программы");
-                    if (!int.TryParse(Console.ReadLine(), out taskNumber))
-                    {
-                        Console.WriteLine("Введено недопустимое значение, нажмите Enter");
-                        Console.ReadLine();
-                        continue;
-                    }
-                    else break;
-                }
-                switch(taskNumber)
-                {
-                    case 1:
-                        {
-                            WriteFile("workers.cvs", CreateWorker().ReadValues("#"));
-                            break;
-                        }
-                    case 2:
-                        {
-                            ReadFile("workers.cvs");
-                            break;
-                        }
-                    case 3:
-                        File.Delete("workers.cvs");
-                        break;
+                SelectTask(taskNumber);
 
-                        default: break;
-                }
+
                 if (taskNumber == 0)
                 {
                     break;
-                 }
+                }
+            }
+        }
+
+        static void SelectTask(int taskNumber)
+        {
+            switch (taskNumber)
+            {
+                case 1:
+                    {
+                        repository.AddWorker(GetWorkersDataFromConsole());
+                        repository.SaveData();
+                        break;
+                    }
+                case 2:
+                    {
+                        Console.WriteLine("Введите ID сотрудника");
+                        repository.DeleteWorkerByID(TryParseCustom.TryReadLineInt(Console.ReadLine()));
+                        repository.SaveData();
+                        break;
+                    }
+
+                case 3:
+                    {
+                        Console.WriteLine("Введите ID сотрудника");
+                        repository.OutputData(TryParseCustom.TryReadLineInt(Console.ReadLine()));
+                        break;
+                    }
+                case 4:
+                    {
+                        repository.OutputData();
+                        break;
+                    }
+                case 5:
+                    repository.DeleteData();
+                    break;
+                case 6:
+                    {
+                        Console.WriteLine("Введите первую дату в формате dd/mm/yyyy");
+                        DateTime firstDate = TryParseCustom.TryReadLineDataTime(Console.ReadLine());
+
+                        Console.WriteLine("Введите вторую дату в формате dd/mm/yyyy");
+                        DateTime secondDate = TryParseCustom.TryReadLineDataTime(Console.ReadLine());
+
+                        repository.OutputData(firstDate, secondDate);
+                        break;
+                    }
+
+                default: break;
             }
         }
 
 
-        static Worker CreateWorker()
+        static Worker GetWorkersDataFromConsole()
         {
             Worker worker = new Worker();
 
             Console.WriteLine("Введите ID сотрудника");
-            worker.CreationTime = DateTime.Now;
-            worker.Id = TryReadLineInt(Console.ReadLine());
+            worker.Id = TryParseCustom.TryReadLineInt(Console.ReadLine());
+
             Console.WriteLine("Введите ФИО сотрудника");
             worker.Name = Console.ReadLine();
           
             Console.WriteLine("Введите рост сотрудника");
-            worker.Tall = TryReadLineFloat(Console.ReadLine());
+            worker.Tall = TryParseCustom.TryReadLineFloat(Console.ReadLine());
+
             Console.WriteLine("Введите дату рождения сотрудника в формате dd/mm/yyyy");
-            worker.BirthDate = TryReadLineDataTime(Console.ReadLine()).Date;
+            worker.BirthDate = TryParseCustom.TryReadLineDataTime(Console.ReadLine()).Date;
             worker.Old = DateTime.Now.Year - worker.BirthDate.Year;
+
             Console.WriteLine("Введите место рождения сотрудника");
             worker.BirthLocation = Console.ReadLine();
 
+            worker.CreationTime = DateTime.Now;
             return worker;
         }
-
-        #region TryReadLine
-        static int TryReadLineInt(string str)
-        {
-            int value;
-            while (true)
-            {         
-                if (!int.TryParse(str, out value))
-                {
-                    Console.WriteLine("Введено недопустимое значение, нажмите Enter и попробуйте ещё раз");
-                    str = Console.ReadLine();
-                    continue;
-                }
-                else return value;
-            }
-        }
-        static float TryReadLineFloat(string str)
-        {
-            float value;
-            while (true)
-            {
-                if (!float.TryParse(str, out value))
-                {
-                    Console.WriteLine("Введено недопустимое значение, нажмите Enter и попробуйте ещё раз");
-                    str = Console.ReadLine();
-                    continue;
-                }
-                else return value;
-            }
-        }
-        static DateTime TryReadLineDataTime(string str)
-        {
-            DateTime value;
-            while (true)
-            {
-                if (!DateTime.TryParse(str, out value))
-                {
-                    Console.WriteLine("Введено недопустимое значение, нажмите Enter и попробуйте ещё раз");
-                    Console.ReadLine();
-                    str = Console.ReadLine();
-                    continue;
-                }
-                else return value;
-            }
-        }
-        #endregion
- 
-
-        static void ReadFile(string path)
-        {
-            if (!File.Exists(path))
-                return;
-            using (StreamReader stream = new StreamReader(path))
-            {
-                while (!stream.EndOfStream)
-                {
-                    string[] line = stream.ReadLine().Split("#");
-                    
-                    Console.WriteLine(String.Join(" ", line));
-                }
-            }
-        }
-
-        static void WriteFile(string path, string data)
-        {
-            using (StreamWriter stream = new StreamWriter(path, true))
-            {
-                stream.WriteLine(data);
-            }
-        }
-
     }
 }
 
