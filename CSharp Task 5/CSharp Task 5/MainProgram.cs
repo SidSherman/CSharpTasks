@@ -70,12 +70,12 @@ namespace CSharp_Task_5
                 case 3:
                     {
                         Console.WriteLine("Введите ID сотрудника");
-                        repository.OutputData(TryParseCustom.TryReadLineInt(Console.ReadLine()));
+                        Console.WriteLine(repository.OutputData(TryParseCustom.TryReadLineInt(Console.ReadLine())));
                         break;
                     }
                 case 4:
                     {
-                        repository.OutputData();
+                        Console.WriteLine(repository.OutputData());
                         break;
                     }
                 case 5:
@@ -89,7 +89,7 @@ namespace CSharp_Task_5
                         Console.WriteLine("Введите вторую дату в формате dd/mm/yyyy");
                         DateTime secondDate = TryParseCustom.TryReadLineDataTime(Console.ReadLine());
 
-                        repository.OutputData(firstDate, secondDate);
+                        Console.WriteLine(repository.OutputData(firstDate, secondDate));
                         break;
                     }
                 case 7:

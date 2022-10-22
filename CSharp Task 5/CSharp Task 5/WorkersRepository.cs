@@ -144,53 +144,68 @@ namespace CSharp_Task_5
             }
         }
 
-        public void OutputData(DateTime firstDate, DateTime secondTime)
+        public string OutputData(DateTime firstDate, DateTime secondTime)
         {
             if (RepositoryIsEmpty())
             {
-                return;
+                return "";
             }
+
+            string output = "";
 
             foreach (Worker worker in workers)
             {
                 if (worker.CreationTime > firstDate && worker.CreationTime  < secondTime)
                 {
-                    Console.WriteLine(worker.ReadValues(" "));
+                    output += worker.ReadValues(" ");
+                    //Console.WriteLine(worker.ReadValues(" "));
                 }
             }
+            return output;
         }
 
-        public void OutputData(int id)
+        public string OutputData(int id)
         {
             if (RepositoryIsEmpty())
             {
-                return;
+                return "";
             }
+            string output = "";
 
             Worker worker = GetWorkerByID(id);
             if (worker.Id != 0)
             {
-                Console.WriteLine(worker.ReadValues(" "));
+                output += worker.ReadValues(" ");
+                //Console.WriteLine(worker.ReadValues(" "));
+                return output;
             }
             else
             {
-                Console.WriteLine("Работник с таким ID не существует");
+                return "Работник с таким ID не существует";
+                //Console.WriteLine("Работник с таким ID не существует");
             }
+
         }
 
-        public void OutputData()
+        public string OutputData()
         {
             if (RepositoryIsEmpty())
             { 
-                return;
+                return "";
             }
+
+            string output = "";
 
             foreach (Worker worker in workers)
             {
-                Console.WriteLine(worker.ReadValues(" "));
+                output += worker.ReadValues(" ");
+                //Console.WriteLine(worker.ReadValues(" "));
             }
-            Console.WriteLine();
+            return output;
+
+
         }
+
         public bool RepositoryIsEmpty()
         {
             if (workers.Count < 1)
