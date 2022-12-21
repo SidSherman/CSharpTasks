@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Xml.Linq;
 
 namespace CSharpTask7
 {
@@ -47,63 +47,87 @@ namespace CSharpTask7
             {
                 case 1:
                     {
-                        MyIntList myList = new MyIntList(100, 0, 100);
-                        Console.WriteLine(myList.ConvertToString());
-                        myList.RemoveData(25, 50);
-                        Console.WriteLine(myList.ConvertToString());
+                        Task1();
                         break;
                     }
                 case 2:
                     {
-                        TelephoneDictionary telephoneDictionary = new TelephoneDictionary();
-                        string note = "";
-                        while (true)
-                        {
-                            Console.WriteLine("Введите номер телефона без +7 и пробелов и ФИО через запятую, чтобы закончить ввод введите 0");
-
-                            note = Console.ReadLine();
-
-                            if (note == "0")
-                                break;
-
-                            telephoneDictionary.AddNote(note);
-
-                        }
-
-                        Console.WriteLine("Введите номер телефона без +7 и пробелов, чтобы найти владельца");
-                            note = Console.ReadLine();
-
-
-                        Console.WriteLine(telephoneDictionary.GetNameByNumber(note));
+                        Task2();
                         break;
                     }
 
                 case 3:
                     {
-                        HashSet<int> set = new HashSet<int>();
-                        Console.WriteLine("Введите число");
 
-                        int number;
-                        if(int.TryParse(Console.ReadLine(), out number))
-                        {
-                            if(set.Contains(number))
-                                {
-                                Console.WriteLine("Число успешно добавлено");
-                            }
-                            else { Console.WriteLine("Число уже есть в мнодестве"); }
-                        }
-                        else { Console.WriteLine("Введено неправильное число"); }
-
+                        Task3();
                         break;
                     }
                 case 4:
                     {
-                       
+                        Task4();
                         break;
                     }
 
                 default: break;
             }
+        }
+
+
+        static void Task1()
+        {
+            MyIntList myList = new MyIntList(100, 0, 100);
+            Console.WriteLine(myList.ConvertToString());
+            myList.RemoveData(25, 50);
+            Console.WriteLine(myList.ConvertToString());
+        }
+
+        static void Task2()
+        {
+
+            TelephoneDictionary telephoneDictionary = new TelephoneDictionary();
+            string note = "";
+            while (true)
+            {
+                Console.WriteLine("Введите номер телефона без +7 и пробелов и ФИО через запятую, чтобы закончить ввод введите 0");
+
+                note = Console.ReadLine();
+
+                if (note == "0")
+                    break;
+
+                telephoneDictionary.AddNote(note);
+            }
+
+            Console.WriteLine("Введите номер телефона без +7 и пробелов, чтобы найти владельца");
+            note = Console.ReadLine();
+
+            Console.WriteLine(telephoneDictionary.GetNameByNumber(note));
+        }
+
+
+        static void Task3()
+        {
+            HashSet<int> set = new HashSet<int>();
+            Console.WriteLine("Введите число");
+
+            int number;
+            if (int.TryParse(Console.ReadLine(), out number))
+            {
+                if (set.Contains(number))
+                {
+                    Console.WriteLine("Число успешно добавлено");
+                }
+                else { Console.WriteLine("Число уже есть в мнодестве"); }
+            }
+            else { Console.WriteLine("Введено неправильное число"); }
+
+        }
+
+        static void Task4()
+        {
+            TelephoneBook book = new TelephoneBook();
+            FileHandler.WriteLineInFile("_xmlTest.xml", book.SerializeDataToXML(new TelephoneContact("Имя", "street", "house", "flatnum", "mobileP", "flatPhone")));
+
         }
 
     }
@@ -222,4 +246,94 @@ namespace CSharpTask7
 
     }
 
+    class TelephoneContact
+    {
+
+        private string name;
+        private string street;
+        private string houseNumber;
+        private string flatNumber;
+        private string mobilePhone;
+        private string flatPhone;
+
+        public string Name { get => name; set => name = value; }
+        public string Street { get => street; set => street = value; }
+        public string HouseNumber { get => houseNumber; set => houseNumber = value; }
+        public string FlatNumber { get => flatNumber; set => flatNumber = value; }
+        public string MobilePhone { get => mobilePhone; set => mobilePhone = value; }
+        public string FlatPhone { get => flatPhone; set => flatPhone = value; }
+
+        public TelephoneContact ()
+        {
+
+        }
+
+        public TelephoneContact(string name, string street, string houseName, string flatNumber, string mobilePhone, string flatPhone)
+        {
+            Name = name;
+            Street = street;
+            HouseNumber= houseName;
+            FlatNumber = flatNumber;
+            MobilePhone = mobilePhone;
+            FlatPhone = flatPhone;
+        }
+
+    }
+
+    class TelephoneBook
+    {
+        private List<TelephoneContact> telephoneContacts= new List<TelephoneContact>();
+        public List<TelephoneContact> TelephoneContacts { get => telephoneContacts; set => telephoneContacts = value; }
+
+        public TelephoneBook()
+        { }
+
+        public TelephoneBook(TelephoneContact contact)
+        {
+            AddContact(contact);
+        }
+
+        TelephoneBook(List<TelephoneContact> telephoneContacts)
+        {
+            TelephoneContacts = telephoneContacts;
+        }
+
+        public void AddContact(TelephoneContact contact)
+        {
+            TelephoneContacts.Add(contact);
+        }
+
+        public void AddContact(string name, string street, string houseName, string flatNumber, string mobilePhone, string flatPhone)
+        {
+            TelephoneContacts.Add(new TelephoneContact(name, street, houseName, flatNumber, mobilePhone, flatPhone));
+        }
+
+        public string SerializeDataToXML(TelephoneContact contact)
+        {
+            XElement xmlPERSON = new XElement("PERSON");
+            XElement xmlADDRESS = new XElement("ADDRESS");
+            XElement xmlStreet = new XElement("Street");
+            XElement xmlPHONES = new XElement("PHONES");
+            XElement xmlHouseNumber = new XElement("HouseNumber");
+            XElement xmlFlatNumber = new XElement("FlatNumber");
+            XElement xmlMobilePhone = new XElement("MobilePhone");
+            XElement xmlFlatPhone = new XElement("FlatPhone");
+
+            XAttribute xmlNameAttr = new XAttribute("name", contact.Name);
+            
+            xmlPERSON.Add(xmlNameAttr);
+            xmlStreet.Add(contact.Street);
+            xmlFlatNumber.Add(contact.FlatNumber);
+            xmlHouseNumber.Add(contact.HouseNumber);
+            xmlMobilePhone.Add(contact.MobilePhone);
+            xmlFlatPhone.Add(contact.FlatPhone);
+
+            xmlADDRESS.Add(xmlStreet, xmlHouseNumber, xmlFlatNumber);
+            xmlPHONES.Add(xmlMobilePhone, xmlFlatPhone);
+            xmlPERSON.Add(xmlADDRESS, xmlPHONES);
+
+            return xmlPERSON.ToString();
+        }
+
+    }
 }
