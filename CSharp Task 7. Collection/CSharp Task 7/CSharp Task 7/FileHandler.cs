@@ -23,17 +23,17 @@ namespace CSharpTask7
             return lines;
         }
 
-        static public void WriteLineInFile(string path, string data)
+        static public void WriteLineInFile(string path, string data, bool shouldAppend)
         {
-            using (StreamWriter stream = new StreamWriter(path, true))
+            using (StreamWriter stream = new StreamWriter(path, shouldAppend))
             {
                     stream.WriteLine(data);
             }
         }
 
-        static public void WriteLineInFile(string path, XElement data)
+        static public void WriteLineInFile(string path, XElement data, bool shouldAppend)
         {
-            using (StreamWriter stream = new StreamWriter(path, true))
+            using (StreamWriter stream = new StreamWriter(path, shouldAppend))
             {
                 stream.WriteLine(data);
             }

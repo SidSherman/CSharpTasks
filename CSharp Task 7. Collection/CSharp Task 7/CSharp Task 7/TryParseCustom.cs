@@ -26,14 +26,13 @@ namespace CSharpTask7
         static public bool VerifyNumber(string str)
         {
             int value;
-
             str.Replace(" ", "");
 
-            if (!int.TryParse(str, out value))
+            if (int.TryParse(str, out value))
             {
-                return false;
+                return true;
             }
-            else return true;
+            else return false;
 
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Linq;
+
 
 namespace CSharpTask7
 {
@@ -12,8 +12,6 @@ namespace CSharpTask7
             GetUsersCommand();
         }
 
-
-
         static void GetUsersCommand()
         {
             while (true)
@@ -22,10 +20,7 @@ namespace CSharpTask7
                     "1.Работа с листом\n" +
                     "2.Работа с телефонной книгой\n" +
                     "3.Проверка повторов\n" +
-                    "4.Вывести все данные\n" +
-                    "5.Стереть все данные\n" +
-                    "6.Вывести записи, созданные в пределах указанных дат\n" +
-                    "7.Отсортировать данные по параметру\n" +
+                    "4.Работа с адресной книгой\n" +
                     "0.Выход из программы");
 
                 int taskNumber = 0;
@@ -72,12 +67,13 @@ namespace CSharpTask7
             }
         }
 
-
         static void Task1()
         {
             MyIntList myList = new MyIntList(100, 0, 100);
+            Console.WriteLine("100 случайных чисел от 0 до 100:");
             Console.WriteLine(myList.ConvertToString());
             myList.RemoveData(25, 50);
+            Console.WriteLine("Удалены числа от 25, до 50-ти:");
             Console.WriteLine(myList.ConvertToString());
         }
 
@@ -86,254 +82,145 @@ namespace CSharpTask7
 
             TelephoneDictionary telephoneDictionary = new TelephoneDictionary();
             string note = "";
+
             while (true)
             {
-                Console.WriteLine("Введите номер телефона без +7 и пробелов и ФИО через запятую, чтобы закончить ввод введите 0");
 
-                note = Console.ReadLine();
+                Console.WriteLine("Введите действие:\n" +
+                    "1.Ввести номер\n" +
+                    "2.Найти владельца номера\n" +
+                    "0.Выход в меню");
 
-                if (note == "0")
+                int actionNumber = 0;
+                actionNumber = TryParseCustom.TryReadLineInt(Console.ReadLine());
+
+                if (actionNumber == 0)
+                {
                     break;
+                }
 
-                telephoneDictionary.AddNote(note);
+                switch (actionNumber)
+                    {
+                    case 1:
+                        {
+
+                            Console.WriteLine("Введите номер телефона без +7 и пробелов и ФИО через запятую.");
+
+                            note = Console.ReadLine();
+
+                            telephoneDictionary.AddNote(note);
+                            break;
+                        }
+                    case 2:
+                    {
+                        Console.WriteLine("Введите номер телефона без +7 и пробелов, чтобы найти владельца");
+                        note = Console.ReadLine();
+
+                        Console.WriteLine(telephoneDictionary.GetNameByNumber(note));
+                        break;
+                    }
+                }
             }
-
-            Console.WriteLine("Введите номер телефона без +7 и пробелов, чтобы найти владельца");
-            note = Console.ReadLine();
-
-            Console.WriteLine(telephoneDictionary.GetNameByNumber(note));
         }
 
 
         static void Task3()
         {
             HashSet<int> set = new HashSet<int>();
-            Console.WriteLine("Введите число");
-
-            int number;
-            if (int.TryParse(Console.ReadLine(), out number))
+            while (true)
             {
-                if (set.Contains(number))
-                {
-                    Console.WriteLine("Число успешно добавлено");
-                }
-                else { Console.WriteLine("Число уже есть в мнодестве"); }
-            }
-            else { Console.WriteLine("Введено неправильное число"); }
+                Console.WriteLine("Введите число, чтобы добавить число в множество. Введите -1, чтобы выйти в меню");
 
+                int number;
+
+                if (int.TryParse(Console.ReadLine(), out number))
+                {
+                    if (number == -1)
+                        break;
+
+                    if (set.Contains(number))
+                    {
+                        Console.WriteLine("Число уже есть в множестве");
+                    }
+                    else 
+                    {
+                        set.Add(number);
+                        Console.WriteLine("Число успешно добавлено");
+                    }
+                }
+                else 
+                { 
+                    if(number == -1) 
+                        break;
+
+                    Console.WriteLine("Введено неправильное число"); 
+                }
+            }
         }
 
         static void Task4()
         {
+
             TelephoneBook book = new TelephoneBook();
-            FileHandler.WriteLineInFile("_xmlTest.xml", book.SerializeDataToXML(new TelephoneContact("Имя", "street", "house", "flatnum", "mobileP", "flatPhone")));
 
-        }
+            book.AddContact(new TelephoneContact("Имя", "street", "house", "flatnum", "mobileP", "flatPhone"));
+            book.AddContact(new TelephoneContact("Имя1", "street1", "house1", "flatnum1", "mobileP1", "flatPhone1"));
+            book.AddContact(new TelephoneContact("Имя2", "street2", "house2", "flatnum2", "mobile2", "flatPhone2"));
+            book.AddContact(new TelephoneContact("Имя3", "street3", "house3", "flatnum2", "mobileP3", "flatPhone3"));
 
-    }
+            FileHandler.WriteLineInFile("_xmlTest.xml", book.SerializeAllDataToXML(), false);
 
-    class MyIntList
-    {
-        private List<int> list = new List<int>();
+            Console.WriteLine("Данные сохранены в bin\\Debug\\net6.0\\_xmlTest.xml");
+            book.ClearData();
 
-        public List<int> List { get => list; set => list = value; }
-
-        public MyIntList() {}
-
-        public MyIntList(int lenght = 100)
-        {
-            Random rand = new Random();
-
-            for (int i = 0; i < lenght; i++)
+            /* ввод данных с клавиатуры
+            while (true)
             {
-                list.Add(rand.Next());
+
+                Console.WriteLine("Введите действие:\n" +
+                    "1.Ввести данные\n" +
+                    "2.Сохранить данные в XML\n" +
+                    "0.Выход в меню");
+
+                int actionNumber = 0;
+                actionNumber = TryParseCustom.TryReadLineInt(Console.ReadLine());
+
+                if (actionNumber == 0)
+                {
+                    break;
+                }
+
+                switch (actionNumber)
+                {
+                    case 1:
+                    {
+
+                        Console.WriteLine("Введите номер ФИО:");
+
+                        string name = Console.ReadLine(); ;
+                        Console.WriteLine("Введите название улицы:");
+                        string street = Console.ReadLine();
+                        Console.WriteLine("Введите номер дома:");
+                        string houseNumber = Console.ReadLine();
+                        Console.WriteLine("Введите номер квартиры:");
+                        string flatNumber = Console.ReadLine();
+                        Console.WriteLine("Введите номер мобильного телефона:");
+                        string mobilePhone = Console.ReadLine();
+                        Console.WriteLine("Введите номер домашнего телефона:");
+                        string flatPhone = Console.ReadLine();
+                        book.AddContact(new TelephoneContact(name,street,houseNumber,flatNumber,mobilePhone,flatPhone));
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        FileHandler.WriteLineInFile("_xmlTest.xml", book.SerializeAllDataToXML(), false);
+                        Console.WriteLine("Данные сохранены в bin\\Debug\net6.0\\_xmlTest.xml");
+                        break;
+                    }
+                }
             }
+            */
         }
-
-        public MyIntList(int lenght = 100, int min = 0, int max = 100)
-        {
-            Random rand = new Random();
-
-            for(int i = 0; i < lenght; i++)
-            {
-                list.Add(rand.Next(min, max));
-            }
-        }
-
-        public void AddData(params int[] parameters)
-        {
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                list.Add(parameters[i]);
-            }     
-        }
-
-        public void RemoveData(int min, int max)
-        {
-            list.RemoveAll(item => item > min && item < max);
-        }
-
-        public void RemoveData()
-        {
-            list.Clear();
-        }
-
-        public string ConvertToString(string separator)
-        {
-            string str = "";
-            
-            foreach(int number in list)
-            {
-                str = str + separator +  number.ToString();
-            }
-            return str;
-        }
-
-        public string ConvertToString()
-        {
-            string str = "";
-
-            foreach (int number in list)
-            {
-                str = str + " " + number.ToString();
-            }
-            return str;
-        }
-    }
-
-    class TelephoneDictionary
-    {
-        private Dictionary<string, string> note = new Dictionary<string, string>();
-
-        public Dictionary<string, string> Note { get => note; set => note = value; }
-
-        public TelephoneDictionary()
-        {
-
-        }
-
-        public void AddNote(string input)
-        {
-            string[] noteArray = input.Split(",");
-            if (noteArray.Length != 2)
-                return;
-            if (!TryParseCustom.VerifyNumber(noteArray[0]))
-                return;
-
-            Note.Add(noteArray[0], noteArray[1]);
-
-        }
-
-        public void AddNote(string number, string name)
-        {
-            if (!TryParseCustom.VerifyNumber(number))
-                return;
-            Note.Add(number, name);
-        }
-
-        public string GetNameByNumber(string number)
-        {
-            note.TryGetValue(number, out string name);
-
-            if(name == null)
-            {
-                name = "Такого номера в телефонной книге нет";
-            }
-
-            return name;
-
-        }
-
-    }
-
-    class TelephoneContact
-    {
-
-        private string name;
-        private string street;
-        private string houseNumber;
-        private string flatNumber;
-        private string mobilePhone;
-        private string flatPhone;
-
-        public string Name { get => name; set => name = value; }
-        public string Street { get => street; set => street = value; }
-        public string HouseNumber { get => houseNumber; set => houseNumber = value; }
-        public string FlatNumber { get => flatNumber; set => flatNumber = value; }
-        public string MobilePhone { get => mobilePhone; set => mobilePhone = value; }
-        public string FlatPhone { get => flatPhone; set => flatPhone = value; }
-
-        public TelephoneContact ()
-        {
-
-        }
-
-        public TelephoneContact(string name, string street, string houseName, string flatNumber, string mobilePhone, string flatPhone)
-        {
-            Name = name;
-            Street = street;
-            HouseNumber= houseName;
-            FlatNumber = flatNumber;
-            MobilePhone = mobilePhone;
-            FlatPhone = flatPhone;
-        }
-
-    }
-
-    class TelephoneBook
-    {
-        private List<TelephoneContact> telephoneContacts= new List<TelephoneContact>();
-        public List<TelephoneContact> TelephoneContacts { get => telephoneContacts; set => telephoneContacts = value; }
-
-        public TelephoneBook()
-        { }
-
-        public TelephoneBook(TelephoneContact contact)
-        {
-            AddContact(contact);
-        }
-
-        TelephoneBook(List<TelephoneContact> telephoneContacts)
-        {
-            TelephoneContacts = telephoneContacts;
-        }
-
-        public void AddContact(TelephoneContact contact)
-        {
-            TelephoneContacts.Add(contact);
-        }
-
-        public void AddContact(string name, string street, string houseName, string flatNumber, string mobilePhone, string flatPhone)
-        {
-            TelephoneContacts.Add(new TelephoneContact(name, street, houseName, flatNumber, mobilePhone, flatPhone));
-        }
-
-        public string SerializeDataToXML(TelephoneContact contact)
-        {
-            XElement xmlPERSON = new XElement("PERSON");
-            XElement xmlADDRESS = new XElement("ADDRESS");
-            XElement xmlStreet = new XElement("Street");
-            XElement xmlPHONES = new XElement("PHONES");
-            XElement xmlHouseNumber = new XElement("HouseNumber");
-            XElement xmlFlatNumber = new XElement("FlatNumber");
-            XElement xmlMobilePhone = new XElement("MobilePhone");
-            XElement xmlFlatPhone = new XElement("FlatPhone");
-
-            XAttribute xmlNameAttr = new XAttribute("name", contact.Name);
-            
-            xmlPERSON.Add(xmlNameAttr);
-            xmlStreet.Add(contact.Street);
-            xmlFlatNumber.Add(contact.FlatNumber);
-            xmlHouseNumber.Add(contact.HouseNumber);
-            xmlMobilePhone.Add(contact.MobilePhone);
-            xmlFlatPhone.Add(contact.FlatPhone);
-
-            xmlADDRESS.Add(xmlStreet, xmlHouseNumber, xmlFlatNumber);
-            xmlPHONES.Add(xmlMobilePhone, xmlFlatPhone);
-            xmlPERSON.Add(xmlADDRESS, xmlPHONES);
-
-            return xmlPERSON.ToString();
-        }
-
     }
 }
